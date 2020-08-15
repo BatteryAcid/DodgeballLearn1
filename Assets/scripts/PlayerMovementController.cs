@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerMovementController : MonoBehaviour
 {
@@ -9,12 +10,15 @@ public class PlayerMovementController : MonoBehaviour
    public float baseBallThrust = 20.0f;
 
    private float _throwKeyPressedStartTime;
-   private BallController _ballController;
+   private BallActionHandler _ballActionHandler;
 
    void Start()
    {
+      // For now just hit this variable to create the singleton
+      WebSocketService.Instance.init();
+
       player = GetComponent<Rigidbody>();
-      _ballController = new BallController(playerCamera, ball, baseBallThrust);
+      _ballActionHandler = new BallActionHandler(playerCamera, ball, baseBallThrust);
    }
 
    void Update()
@@ -30,7 +34,12 @@ public class PlayerMovementController : MonoBehaviour
 
       if (Input.GetMouseButtonUp(0))
       {
-         _ballController.BallActionHandler(player.transform.position, player.transform.forward, _throwKeyPressedStartTime);
+
+         // allows us to click the button with over it with the mouse
+         if (EventSystem.current.IsPointerOverGameObject())
+            return; 
+            
+         _ballActionHandler.ThrowBall(player.transform.position, player.transform.forward, _throwKeyPressedStartTime);
       }
    }
 

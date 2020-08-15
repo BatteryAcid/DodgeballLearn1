@@ -1,20 +1,20 @@
 ﻿using UnityEngine;
 
-public class BallController
+public class BallActionHandler
 {
    private Transform _playerCamera;
    private Rigidbody _ball;
    private float _baseBallThrust;
    private float _yAxisSpawnPointAdjustment = 2.0f;
 
-   public BallController(Transform playerCamera, Rigidbody ball, float baseBallThrust)
+   public BallActionHandler(Transform playerCamera, Rigidbody ball, float baseBallThrust)
    {
       _playerCamera = playerCamera;
       _ball = ball;
       _baseBallThrust = baseBallThrust;
    }
 
-   public void BallActionHandler(Vector3 playerPosition, Vector3 playerForward, float throwKeyPressedStartTime)
+   public void ThrowBall(Vector3 playerPosition, Vector3 playerForward, float throwKeyPressedStartTime)
    {
       //Debug.Log((Time.time - throwKeyPressedStartTime).ToString("00:00.00"));
       float throwKeyPressedTime = Time.time - throwKeyPressedStartTime;
@@ -32,6 +32,9 @@ public class BallController
             _ball.velocity = new Vector3(0, 0, 0);
 
             _ball.AddForce(DetermineVectorOfThrow() * DetermineThrustOfBall(throwKeyPressedTime), ForceMode.Impulse);
+
+            GameMessage throwMessage = new GameMessage("OnMessage", WebSocketService.ThrowOp);
+            WebSocketService.Instance.SendWebSocketMessage(JsonUtility.ToJson(throwMessage));
          }
       }
    }
@@ -73,7 +76,7 @@ public class BallController
       return cameraVector;
    }
 
-   // Use to debug what the object is overlapping with
+   // DEBUG: Use to debug what the object is overlapping with
    private void PrintOverlapShereObjects(Vector3 spawnPos)
    {
       Collider[] hitColliders = Physics.OverlapSphere(spawnPos, 0.5f);

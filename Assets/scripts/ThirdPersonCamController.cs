@@ -11,6 +11,7 @@ public class ThirdPersonCamController : MonoBehaviour
 
    private Transform _camTransform;
    private float _mouseX, _mouseY, _zoom;
+   private bool _cursorLocked = true;
 
    void Start()
    {
@@ -27,6 +28,18 @@ public class ThirdPersonCamController : MonoBehaviour
    void LateUpdate()
    {
       CamControl();
+   }
+
+   void Update() {
+      if (Input.GetKeyDown("escape") && !_cursorLocked) {
+         Cursor.visible = false;
+         Cursor.lockState = CursorLockMode.Locked;
+         _cursorLocked = !_cursorLocked;
+      } else if (Input.GetKeyDown("escape") && _cursorLocked) {
+         Cursor.visible = true;
+         Cursor.lockState = CursorLockMode.None;
+         _cursorLocked = !_cursorLocked;
+      }
    }
 
    private void CamControl()
