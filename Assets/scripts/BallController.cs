@@ -73,6 +73,7 @@ public class BallActionHandler
    private Vector3 DetermineVectorOfThrow()
    {
       Vector3 cameraVector = _playerCamera.transform.forward;
+      cameraVector.y += 0.2f; // shim to get the throw vector more playable
       return cameraVector;
    }
 

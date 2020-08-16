@@ -19,7 +19,7 @@ public class ThirdPersonCamController : MonoBehaviour
       Cursor.lockState = CursorLockMode.Locked;
 
       _camTransform = transform;
-      _zoom = -3;
+      _zoom = -10;
 
       // set start position
       Player.position = new Vector3(Random.Range(-15.0f, 15.0f), 1, Random.Range(-15.0f, 15.0f));
@@ -54,7 +54,7 @@ public class ThirdPersonCamController : MonoBehaviour
 
       _mouseX += Input.GetAxis("Mouse X") * RotationSpeed;
       _mouseY -= Input.GetAxis("Mouse Y") * RotationSpeed;
-      _mouseY = Mathf.Clamp(_mouseY, -35, 60);
+      _mouseY = Mathf.Clamp(_mouseY, -2, 60);
 
       Vector3 dir = new Vector3(0, 0, _zoom);
 
