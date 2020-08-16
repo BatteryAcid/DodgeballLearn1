@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class StatusController : Singleton<StatusController>
+public class StatusController : MonoBehaviour
 {
    public const string WaitingOnMatch = "Waiting on match...";
    public const string YouWon = "You Won!";

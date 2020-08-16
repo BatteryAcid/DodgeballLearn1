@@ -2,11 +2,14 @@
 
 public class BlockController : MonoBehaviour
 {
+   [SerializeField]
+   private StatusController _statusController = null;
+
    // Detect collisions between the GameObjects with Colliders attached
    void OnCollisionEnter(Collision collision)
    {
       // Check for collision with ball
-      if (StatusController.Instance.IsGamePlayActive() && collision.gameObject.name == "ball")
+      if (_statusController.IsGamePlayActive() && collision.gameObject.name == "ball")
       {
          Debug.Log("Block Hit!");
          

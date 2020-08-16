@@ -3,6 +3,9 @@ using NativeWebSocket;
 
 public class WebSocketService : Singleton<WebSocketService>
 {
+   private StatusController _statusController = null;
+   private Menu _menu = null;
+
    public const string RequestStartOp = "1";
    public const string PlayingOp = "11";
    public const string ThrowOp = "5";
@@ -55,16 +58,16 @@ public class WebSocketService : Singleton<WebSocketService>
 
       if (gameMessage.opcode == PlayingOp)
       {
-         StatusController.Instance.SetText(StatusController.Playing);
+         _statusController.SetText(StatusController.Playing);
       }
       else if (gameMessage.opcode == YouWonOp)
       {
-         StatusController.Instance.SetText(StatusController.YouWon);
+         _statusController.SetText(StatusController.YouWon);
          QuitGame();
       }
       else if (gameMessage.opcode == YouLostOp)
       {
-         StatusController.Instance.SetText(StatusController.YouLost);
+         _statusController.SetText(StatusController.YouLost);
          QuitGame();
       }
    }
@@ -86,7 +89,7 @@ public class WebSocketService : Singleton<WebSocketService>
 
    public async void QuitGame()
    {
-      Menu.Instance.showFindMatch();
+      _menu.showFindMatch();
       await _websocket.Close();
    }
 
@@ -98,6 +101,8 @@ public class WebSocketService : Singleton<WebSocketService>
    void Start()
    {
       Debug.Log("Websocket start");
+      _statusController = FindObjectOfType<StatusController>();
+      _menu = FindObjectOfType<Menu>();
       FindMatch();
    }
 

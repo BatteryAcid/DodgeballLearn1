@@ -1,12 +1,16 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class Menu : Singleton<Menu>
+public class Menu : MonoBehaviour
 {
+   [SerializeField]
+   private StatusController _statusController = null;
+
    private Button quitButton;
    private Button findMatchButton;
 
-   void Start() {
+   void Start()
+   {
       quitButton = GameObject.Find("Quit").GetComponent<Button>();
       findMatchButton = GameObject.Find("FindMatchAndPlay").GetComponent<Button>();
    }
@@ -14,11 +18,11 @@ public class Menu : Singleton<Menu>
    public void OnFindMatchPressed()
    {
       //Debug.Log("OnFindMatchPressed clicked ");
-      
+
       // find new match
       WebSocketService.Instance.FindMatch();
-      
-      StatusController.Instance.SetText(StatusController.WaitingOnMatch);
+
+      _statusController.SetText(StatusController.WaitingOnMatch);
 
       quitButton.gameObject.SetActive(true);
       findMatchButton.gameObject.SetActive(false);
@@ -27,17 +31,18 @@ public class Menu : Singleton<Menu>
    public void OnQuitPressed()
    {
       //Debug.Log("OnQuitPressed clicked ");
-      
-      WebSocketService.Instance.QuitGame();
-      
-      quitButton.gameObject.SetActive(false);  
-      findMatchButton.gameObject.SetActive(true);  
 
-      StatusController.Instance.SetText(StatusController.GameOver);
+      WebSocketService.Instance.QuitGame();
+
+      quitButton.gameObject.SetActive(false);
+      findMatchButton.gameObject.SetActive(true);
+
+      _statusController.SetText(StatusController.GameOver);
    }
 
-   public void showFindMatch() {
-      quitButton.gameObject.SetActive(false);  
+   public void showFindMatch()
+   {
+      quitButton.gameObject.SetActive(false);
       findMatchButton.gameObject.SetActive(true);
    }
 }
