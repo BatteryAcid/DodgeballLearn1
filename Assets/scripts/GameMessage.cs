@@ -9,7 +9,14 @@ public class GameMessage
 
    public GameMessage(string actionIn, string opcodeIn)
    {
-      this.action = actionIn;
-      this.opcode = opcodeIn;
+      action = actionIn;
+      opcode = opcodeIn;
+   }
+
+   public GameMessage(string actionIn, string opcodeIn, string messageIn)
+   {
+      action = actionIn;
+      opcode = opcodeIn;
+      message = messageIn;
    }
 }

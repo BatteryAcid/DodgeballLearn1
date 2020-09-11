@@ -40,9 +40,15 @@ public class Menu : MonoBehaviour
       _statusController.SetText(StatusController.GameOver);
    }
 
-   public void showFindMatch()
+   public void ShowFindMatch()
    {
       quitButton.gameObject.SetActive(false);
       findMatchButton.gameObject.SetActive(true);
+   }
+
+   public void Disconnected() {
+      quitButton.gameObject.SetActive(false);
+      findMatchButton.gameObject.SetActive(true);
+      _statusController.SetText(StatusController.GameOver);
    }
 }

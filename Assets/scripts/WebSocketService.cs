@@ -13,6 +13,7 @@ public class WebSocketService : Singleton<WebSocketService>
    public const string YouWonOp = "91";
    public const string YouLostOp = "92";
 
+   private bool intentionalClose = false;
    private WebSocket _websocket;
    private string _webSocketDns = "wss://YOUR_SOCKET_DNS/STAGE";
 
@@ -23,6 +24,7 @@ public class WebSocketService : Singleton<WebSocketService>
       _websocket.OnOpen += () =>
       {
          Debug.Log("Connection open!");
+         intentionalClose = false;
          GameMessage startRequest = new GameMessage("OnMessage", RequestStartOp);
          SendWebSocketMessage(JsonUtility.ToJson(startRequest));
       };
@@ -35,6 +37,16 @@ public class WebSocketService : Singleton<WebSocketService>
       _websocket.OnClose += (e) =>
       {
          Debug.Log("Connection closed!");
+
+         // only do this if someone quit the game session, and not for a game ending event
+         if (!intentionalClose)
+         {
+            UnityMainThreadHelper.wkr.AddJob(() =>
+            {
+               _menu.Disconnected();
+            });
+         }
+
       };
 
       _websocket.OnMessage += (bytes) =>
@@ -43,15 +55,17 @@ public class WebSocketService : Singleton<WebSocketService>
          string message = System.Text.Encoding.UTF8.GetString(bytes);
          Debug.Log(message.ToString());
 
-         processReceivedMessage(message);
+         ProcessReceivedMessage(message);
       };
 
       // waiting for messages
       await _websocket.Connect();
    }
 
-   private void processReceivedMessage(string message)
+   private void ProcessReceivedMessage(string message)
    {
+      //Debug.Log(message);
+
       GameMessage gameMessage = JsonUtility.FromJson<GameMessage>(message);
       // Debug.Log(JsonUtility.ToJson(gameMessage, true));
       // Debug.Log(gameMessage.uuid);
@@ -59,6 +73,10 @@ public class WebSocketService : Singleton<WebSocketService>
       if (gameMessage.opcode == PlayingOp)
       {
          _statusController.SetText(StatusController.Playing);
+      }
+      else if (gameMessage.opcode == ThrowOp)
+      {
+         Debug.Log(gameMessage.message);
       }
       else if (gameMessage.opcode == YouWonOp)
       {
@@ -89,7 +107,8 @@ public class WebSocketService : Singleton<WebSocketService>
 
    public async void QuitGame()
    {
-      _menu.showFindMatch();
+      intentionalClose = true;
+      _menu.ShowFindMatch();
       await _websocket.Close();
    }
 
@@ -101,6 +120,7 @@ public class WebSocketService : Singleton<WebSocketService>
    void Start()
    {
       Debug.Log("Websocket start");
+      intentionalClose = false;
       _statusController = FindObjectOfType<StatusController>();
       _menu = FindObjectOfType<Menu>();
       FindMatch();
