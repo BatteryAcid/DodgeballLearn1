@@ -5,4 +5,4 @@ This Unity project is used to demonstrate very basic multiplayer matchmaking and
 
 ## Dependencies
 
-* NativeWebSocket - a lightweight library for handling the websocket connection.
+* NativeWebSocket - a lightweight library for handling the websocket connection: https://github.com/endel/NativeWebSocket
