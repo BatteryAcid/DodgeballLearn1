@@ -19,8 +19,6 @@ public class WebSocketService : Singleton<WebSocketService>
 
    async public void FindMatch()
    {
-      _websocket = new WebSocket(_webSocketDns);
-
       _websocket.OnOpen += () =>
       {
          Debug.Log("Connection open!");
@@ -123,6 +121,8 @@ public class WebSocketService : Singleton<WebSocketService>
       intentionalClose = false;
       _statusController = FindObjectOfType<StatusController>();
       _menu = FindObjectOfType<Menu>();
+
+      _websocket = new WebSocket(_webSocketDns);
       FindMatch();
    }
 
