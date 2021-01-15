@@ -17,7 +17,8 @@ public class WebSocketService : Singleton<WebSocketService>
    private WebSocket _websocket;
    private string _webSocketDns = "wss://YOUR_SOCKET_DNS/STAGE";
 
-   async public void FindMatch()
+   // Establishes the connection's lifecycle callbacks.
+   private void SetupWebsocketCallbacks()
    {
       _websocket.OnOpen += () =>
       {
@@ -44,7 +45,6 @@ public class WebSocketService : Singleton<WebSocketService>
                _menu.Disconnected();
             });
          }
-
       };
 
       _websocket.OnMessage += (bytes) =>
@@ -55,7 +55,11 @@ public class WebSocketService : Singleton<WebSocketService>
 
          ProcessReceivedMessage(message);
       };
+   }
 
+   // Connects to the websocket
+   async public void FindMatch()
+   {
       // waiting for messages
       await _websocket.Connect();
    }
@@ -123,6 +127,7 @@ public class WebSocketService : Singleton<WebSocketService>
       _menu = FindObjectOfType<Menu>();
 
       _websocket = new WebSocket(_webSocketDns);
+      SetupWebsocketCallbacks();
       FindMatch();
    }
 
