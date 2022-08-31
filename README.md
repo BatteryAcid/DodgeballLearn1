@@ -5,6 +5,10 @@ This Unity project is used to demonstrate very basic multiplayer matchmaking and
 ## Tutorial Video 
 
 * https://youtu.be/BljQ5FwQzis
+    
+## 👋 Let's talk shop 👇  
+[Discord] https://discord.gg/psjbBDvNBK  
+[Twitter] https://twitter.com/BatteryAcidDev
 
 ## Dependencies
 
